@@ -31,7 +31,7 @@ class DigiFlazzService
         $signature = $this->signature($command);
 
         $payload = [
-            'cmd' => $command,
+            'cmd' => 'deposit',
             'username' => $this->username,
             'sign' => $signature,
         ];
@@ -79,13 +79,13 @@ class DigiFlazzService
         $signature = $this->signature($command);
 
         $payload = [
-            'cmd' => $command,
+            // 'cmd' => $command,
             'username' => $this->username,
-            'sign' => $signature,
-            'ref_id' => $refId,
             'amount' => (int)$amount,
             'Bank' => $bank,
+            'sign' => $signature,
             'owner_name' => $ownerName,
+            // 'ref_id' => $refId,
         ];
 
         Log::info('Deposit Payload: ', $payload);
@@ -99,6 +99,31 @@ class DigiFlazzService
         }
 
         return $response;
+    }
+
+    public function topup($buyer_sku_code, $customer_no, $ref_id)
+    {
+        $signature = $this->signature($ref_id);
+
+        $payload = [
+            'username' => $this->username,
+            'buyer_sku_code' => $buyer_sku_code,
+            'customer_no' => $customer_no,
+            'ref_id' => $ref_id,
+            'sign' => $signature,
+        ];
+
+        Log::info('Transaction Payload: ', $payload);
+
+        $response = $this->sendRequest('POST', '/transaction', $payload);
+
+        if ($response) {
+            Log::info('Transaction Response: ', $response);
+        } else {
+            Log::error('Transaction Response is null');
+        }
+
+        return $response;   
     }
 
     public function sendRequest($method, $endpoint, $data)

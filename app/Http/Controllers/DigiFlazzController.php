@@ -58,4 +58,21 @@ class DigiFlazzController extends Controller
 
         return response()->json($deposit);
     }
+
+    public function topup(Request $request)
+    {
+        $buyer_sku_code = $request->input('buyer_sku_code');
+        $customer_no = $request->input('customer_no');
+        $ref_id = $request->input('ref_id');
+
+        $topup = $this->digiflazzService->topup($buyer_sku_code, $customer_no, $ref_id);
+
+        if ($topup) {
+            Log::info('Controller Topup Response: ', $topup);
+        } else {
+            Log::error('Controller Topup Response is null');
+        }
+
+        return response()->json($topup);
+    }
 }
