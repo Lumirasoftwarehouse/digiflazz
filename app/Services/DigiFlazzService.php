@@ -126,6 +126,32 @@ class DigiFlazzService
         return $response;   
     }
 
+    public function cekTagihan($buyer_sku_code, $customer_no, $ref_id)
+    {
+        $signature = $this->signature($ref_id);
+
+        $payload = [
+            'commands' => "inq-pasca",
+            'username' => $this->username,
+            'buyer_sku_code' => $buyer_sku_code,
+            'customer_no' => $customer_no,
+            'ref_id' => $ref_id,
+            'sign' => $signature,
+        ];
+
+        Log::info('Transaction Payload: ', $payload);
+
+        $response = $this->sendRequest('POST', '/transaction', $payload);
+
+        if ($response) {
+            Log::info('Transaction Response: ', $response);
+        } else {
+            Log::error('Transaction Response is null');
+        }
+
+        return $response;   
+    }
+
     public function sendRequest($method, $endpoint, $data)
     {
         try {
