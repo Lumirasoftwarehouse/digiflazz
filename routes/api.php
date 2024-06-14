@@ -9,3 +9,4 @@ Route::get('/price-list', [DigiFlazzController::class, 'getPriceList']);
 Route::post('/deposit', [DigiFlazzController::class, 'deposit']);
 Route::post('/topup', [DigiFlazzController::class, 'topup']);
 Route::post('/cek-tagihan', [DigiFlazzController::class, 'cekTagihan']);
+Route::post('/bayar-tagihan', [DigiFlazzController::class, 'bayarTagihan']);

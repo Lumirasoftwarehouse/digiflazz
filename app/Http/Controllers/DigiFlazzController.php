@@ -92,4 +92,21 @@ class DigiFlazzController extends Controller
 
         return response()->json($cekTagihan);
     }
+   
+    public function bayarTagihan(Request $request)
+    {
+        $buyer_sku_code = $request->input('buyer_sku_code');
+        $customer_no = $request->input('customer_no');
+        $ref_id = $request->input('ref_id');
+
+        $cekTagihan = $this->digiflazzService->bayarTagihan($buyer_sku_code, $customer_no, $ref_id);
+
+        if ($cekTagihan) {
+            Log::info('Controller Cek Tagihan Response: ', $cekTagihan);
+        } else {
+            Log::error('Controller Cek Tagihan Response is null');
+        }
+
+        return response()->json($cekTagihan);
+    }
 }
