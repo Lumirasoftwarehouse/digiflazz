@@ -55,7 +55,7 @@ class DigiFlazzService
         $signature = $this->signature($command);
 
         $payload = [
-            'cmd' => $command,
+            'cmd' => 'prepaid',
             'username' => $this->username,
             'sign' => $signature,
         ];

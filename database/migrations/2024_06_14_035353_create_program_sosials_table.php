@@ -15,6 +15,9 @@ class CreateProgramSosialsTable extends Migration
     {
         Schema::create('program_sosials', function (Blueprint $table) {
             $table->id();
+            $table->string('image');
+            $table->string('judul');
+            $table->text('deskripsi');
             $table->timestamps();
         });
     }
