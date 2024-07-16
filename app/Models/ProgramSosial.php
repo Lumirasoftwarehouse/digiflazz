@@ -9,5 +9,11 @@ class ProgramSosial extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['image', 'judul', 'deskripsi'];
+    protected $fillable = [
+        'image', 
+        'judul', 
+        'deskripsi',
+        'status',
+        'id_owner'
+    ];
 }

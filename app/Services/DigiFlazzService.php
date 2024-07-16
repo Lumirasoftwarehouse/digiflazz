@@ -199,4 +199,24 @@ class DigiFlazzService
             return null;
         }
     }
+
+    public function inquiryPln($customer_no)
+    {
+        $payload = [
+            'commands' => "pln-subscribe",
+            'customer_no' => $customer_no,
+        ];
+
+        Log::info('Transaction Payload: ', $payload);
+
+        $response = $this->sendRequest('POST', '/transaction', $payload);
+
+        if ($response) {
+            Log::info('Transaction Response: ', $response);
+        } else {
+            Log::error('Transaction Response is null');
+        }
+
+        return $response;
+    }
 }

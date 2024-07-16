@@ -12,13 +12,16 @@ class ProgramSosialController extends Controller
     public function listProgramSosial()
     {
         try {
-            $dataProgramSosial = ProgramSosial::all();
-
+            $dataProgramSosial = ProgramSosial::join('users', 'program_sosials.id_owner', '=', 'users.id')
+                ->select('program_sosials.*', 'users.name as owner_name')
+                ->get();
+    
             return response()->json(['message' => 'success', 'data' => $dataProgramSosial], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'error', 'error' => $e->getMessage()], 500);
         }
     }
+    
 
     public function detailProgramSosial($id)
     {

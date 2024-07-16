@@ -18,6 +18,8 @@ class CreateProgramSosialsTable extends Migration
             $table->string('image');
             $table->string('judul');
             $table->text('deskripsi');
+            $table->enum('status', ['0', '1'])->default('0');
+            $table->foreignId('id_owner')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

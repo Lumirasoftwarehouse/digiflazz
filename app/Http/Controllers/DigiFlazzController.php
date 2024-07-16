@@ -60,6 +60,45 @@ class DigiFlazzController extends Controller
         return response()->json(['data' => array_values($pulsaList)]);
     }
 
+    public function getPriceListGame()
+    {
+        $priceList = $this->digiflazzService->getPriceList();
+    
+        if ($priceList) {
+            // Filter the price list to include only items where category is "Pulsa"
+            $pulsaList = array_filter($priceList['data'], function ($item) {
+                return isset($item['category']) && $item['category'] === 'Games';
+            });
+    
+            Log::info('Controller Price List Response: ', $pulsaList);
+        } else {
+            Log::error('Controller Price List Response is null');
+            $pulsaList = [];
+        }
+    
+        return response()->json(['data' => array_values($pulsaList)]);
+    }
+
+    public function getPriceListVoucherGame(Request $request)
+    {
+        $priceList = $this->digiflazzService->getPriceList();
+    
+        if ($priceList) {
+            // Filter the price list to include only items where category is "Games" and brand matches the request brand
+            $pulsaList = array_filter($priceList['data'], function ($item) use ($request) {
+                return isset($item['category']) && $item['category'] === 'Games' && strcasecmp($item['brand'], $request->brand) === 0;
+            });
+    
+            Log::info('Controller Price List Response: ', $pulsaList);
+        } else {
+            Log::error('Controller Price List Response is null');
+            $pulsaList = [];
+        }
+    
+        return response()->json(['data' => array_values($pulsaList)]);
+    }
+    
+
     public function deposit(Request $request)
     {
         $refId = $request->input('ref_id');
@@ -127,5 +166,20 @@ class DigiFlazzController extends Controller
         }
 
         return response()->json($cekTagihan);
+    }
+
+    public function inquiryPln(Request $request)
+    {
+        $customer_no = $request->input('customer_no');
+
+        $hasilInquiry = $this->digiflazzService->inquiryPln($customer_no);
+
+        if ($hasilInquiry) {
+            Log::info('Controller Cek Tagihan Response: ', $hasilInquiry);
+        } else {
+            Log::error('Controller Cek Tagihan Response is null');
+        }
+
+        return response()->json($hasilInquiry);
     }
 }
