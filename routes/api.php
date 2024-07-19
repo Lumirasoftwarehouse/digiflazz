@@ -7,6 +7,7 @@ use App\Http\Controllers\DigiFlazzController;
 use App\Http\Controllers\ProgramSosialController;
 use App\Http\Controllers\TopupController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\RekeningController;
 
 
 Route::group([
@@ -72,6 +73,19 @@ Route::group([
     Route::post('add-product', [ProductController::class, 'AddProduct']);
     Route::post('margin-product', [ProductController::class, 'settingMargin']);
     Route::delete('delete-product/{id}', [ProductController::class, 'deleteProduct']);
+    // });
+});
+
+Route::group([
+    'prefix' => 'rekening'
+], function () {
+    // Route::group([
+    //     'middleware' => 'auth:api'
+    // ], function () {
+    Route::get('list', [RekeningController::class, 'listRekening']);
+    Route::post('create', [RekeningController::class, 'createRekening']);
+    Route::post('update/{id}', [RekeningController::class, 'updateRekening']);
+    Route::delete('delete/{id}', [RekeningController::class, 'deleteRekening']);
     // });
 });
 

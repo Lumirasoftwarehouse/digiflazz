@@ -31,7 +31,7 @@ class TopupController extends Controller
             'bank_account_name' => 'required',
             'bank_type' => 'required',
             'keterangan' => 'required',
-            'userId' => 'required',
+            'rekeningId' => 'required',
             'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
@@ -41,8 +41,14 @@ class TopupController extends Controller
             $path = $file->store('bukti_transfer', 'public');
             $validateData['bukti_transfer'] = $path;
         }
-
-        Topup::create($validateData);
+        $topup = new Topup();
+        $topup->jumlah_transaksi = $validateData['jumlah_transaksi'];
+        $topup->bank_account_name = $validateData['bank_account_name'];
+        $topup->bank_type = $validateData['bank_type'];
+        $topup->keterangan = $validateData['keterangan'];
+        $topup->userId = auth()->user()->id;
+        $topup->rekeningId = $validateData['rekeningId'];
+        $topup->bukti_transfer = $validateData['bukti_transfer'];
 
         return response()->json(['message' => 'success']);
     }

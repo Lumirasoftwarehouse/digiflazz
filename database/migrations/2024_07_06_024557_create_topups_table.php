@@ -32,6 +32,7 @@ class CreateTopupsTable extends Migration
                 '1' // sudah divalidasi
             ])->default('0');
             $table->foreignId('userId')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('rekeningId')->constrained('rekenings')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
