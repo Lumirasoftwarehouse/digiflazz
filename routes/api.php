@@ -70,6 +70,7 @@ Route::group([
     //     'middleware' => 'auth:api'
     // ], function () {
     Route::get('list-product', [ProductController::class, 'listMyProduct']);
+    Route::get('pulsa-data', [ProductController::class, 'listPulsaData']);
     Route::post('add-product', [ProductController::class, 'AddProduct']);
     Route::post('margin-product', [ProductController::class, 'settingMargin']);
     Route::delete('delete-product/{id}', [ProductController::class, 'deleteProduct']);
@@ -95,13 +96,15 @@ Route::group([
 Route::group([
     'prefix' => 'sosial'
 ], function () {
-    // Route::group([
-        //     'middleware' => 'auth:api'
-        // ], function () {
+    Route::group([
+            'middleware' => 'auth:api'
+        ], function () {
         Route::get('list-sosial', [ProgramSosialController::class, 'listProgramSosial']);
+        Route::get('my-program', [ProgramSosialController::class, 'myProgramSosial']);
         Route::get('detail-sosial/{id}', [ProgramSosialController::class, 'detailProgramSosial']);
         Route::post('create-sosial', [ProgramSosialController::class, 'createProgramSosial']);
         Route::post('update-sosial/{id}', [ProgramSosialController::class, 'updateProgramSosial']);
         Route::delete('delete-sosial/{id}', [ProgramSosialController::class, 'deleteProgramSosial']);
-    // });
+        Route::post('change-status', [ProgramSosialController::class, 'changeStatus']);
+    });
 });

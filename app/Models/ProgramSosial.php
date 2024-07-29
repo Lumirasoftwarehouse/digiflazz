@@ -14,6 +14,7 @@ class ProgramSosial extends Model
         'judul', 
         'deskripsi',
         'status',
+        'saldo',
         'id_owner'
     ];
 }

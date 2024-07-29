@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProgramSosialsTable extends Migration
+class CreateNotifikasisTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateProgramSosialsTable extends Migration
      */
     public function up()
     {
-        Schema::create('program_sosials', function (Blueprint $table) {
+        Schema::create('notifikasis', function (Blueprint $table) {
             $table->id();
-            $table->string('image');
             $table->string('judul');
-            $table->text('deskripsi');
-            $table->biginteger('saldo')->nullable();
-            $table->enum('status', ['0', '1'])->default('0');
-            $table->foreignId('id_owner')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('kategori');
+            $table->string('deskripsi');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateProgramSosialsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('program_sosials');
+        Schema::dropIfExists('notifikasis');
     }
 }

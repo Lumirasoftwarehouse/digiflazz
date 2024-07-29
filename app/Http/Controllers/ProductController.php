@@ -4,28 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ListPrice;
+use App\Models\Notifikasi;
 
 class ProductController extends Controller
 {
     public function listMyProduct()
     {
+        // Mengambil semua data dari model ListPrice
         $dataMyProduct = ListPrice::all();
-
-        if ($dataMyProduct) {
-            // Filter the price list to include only items where category is "Pulsa"
-            $pulsaList = array_filter($dataMyProduct, function ($item) {
-                return isset($item['category']) && $item['category'] === 'Pulsa' || $item['category'] === 'Data';
-            });
-    
-            Log::info('Controller Price List Response: ', $pulsaList);
-        } else {
-            Log::error('Controller Price List Response is null');
-            $pulsaList = [];
-        }
 
         return response()->json([
             'message' => 'success',
             'data' => $dataMyProduct
+        ]);
+    }
+    
+    public function listPulsaData()
+    {
+        $dataMyProduct = ListPrice::all();
+
+        if ($dataMyProduct->isNotEmpty()) {
+            // Filter data untuk hanya menyertakan item dengan kategori 'Pulsa' atau 'Data'
+            $pulsaList = $dataMyProduct->filter(function ($item) {
+                return $item->category === 'Pulsa' || $item->category === 'Data';
+            });
+        } else {
+            $pulsaList = collect(); // Menggunakan koleksi kosong
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $pulsaList->values() // Mengembalikan data yang telah difilter
         ]);
     }
 
@@ -53,6 +62,12 @@ class ProductController extends Controller
         }
 
         ListPrice::create($validateData);
+
+        Notifikasi::create([
+            'judul' => $validateData['product_name'], 
+            'kategori' => 'produk', 
+            'deskripsi' => $validateData['desc']
+        ]);
 
         return response()->json(['error' => 'false', 'message' => 'Product berhasil ditambahkan']);
     }

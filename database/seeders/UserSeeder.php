@@ -27,18 +27,11 @@ class UserSeeder extends Seeder
             'level' => '1',
             'password' => Hash::make('12345'),
         ]);
-        ProgramSosial::create([
-            'image' => 'image pertama',
-            'judul' => 'sosial pertama',
-            'deskripsi' => 'deskripsi pertama',
-            'status' => '1',
-            'id_owner' => '1',
-        ]);
-        ProgramSosial::create([
-            'image' => 'image kedua',
-            'judul' => 'sosial kedua',
-            'deskripsi' => 'deskripsi kedua',
-            'id_owner' => '2',
+        User::create([
+            'name' => 'yayasan',
+            'email' => 'yayasan@gmail.com',
+            'level' => '2',
+            'password' => Hash::make('12345'),
         ]);
     }
 }

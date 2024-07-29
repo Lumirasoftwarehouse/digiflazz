@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ProgramSosial;
+use App\Models\ProgramSosial;  
+use App\Models\User;  
+use App\Models\Notifikasi;  
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,6 +22,13 @@ class ProgramSosialController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'error', 'error' => $e->getMessage()], 500);
         }
+    }
+
+    public function myProgramSosial()
+    {
+        $dataProgramSosial = ProgramSosial::where('id_owner', auth()->user()->id)->get();
+
+        return response()->json(['message' => 'success', 'data' => $dataProgramSosial], 200);
     }
     
 
@@ -53,6 +62,7 @@ class ProgramSosialController extends Controller
                 'image' => Storage::url($imagePath),
                 'judul' => $request->judul,
                 'deskripsi' => $request->deskripsi,
+                'id_owner' => auth()->user()->id,
             ]);
 
             return response()->json(['message' => 'success'], 201);
@@ -97,6 +107,34 @@ class ProgramSosialController extends Controller
             return response()->json(['message' => 'error', 'error' => $e->getMessage()], 500);
         }
     }
+
+    public function changeStatus(Request $request)
+    {
+        $validateData = $request->validate([
+            'id' => 'required',
+            'status' => 'required'
+        ]);
+        $checkAdmin = User::find(auth()->user()->id);
+        if ($checkAdmin->level == '1') {
+            $dataSosial = ProgramSosial::find($validateData['id']);
+            if ($dataSosial) {
+                $dataSosial->status = $validateData['status'];
+                $dataSosial->save();
+
+                if ($validateData['status'] == '1') {
+                    Notifikasi::create([
+                        'judul' => $dataSosial->judul, 
+                        'kategori' => 'sosial', 
+                        'deskripsi' => $dataSosial->deskripsi
+                    ]);
+                }
+                return response()->json(['message' => 'success'], 200);
+            }
+            return response()->json(['message' => 'success'], 400);
+        }
+        return response()->json(['message' => 'success'], 400);
+    }
+
 
     public function deleteProgramSosial($id)
     {

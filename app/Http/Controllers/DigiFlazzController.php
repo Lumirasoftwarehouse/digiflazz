@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\DigiFlazzService;
+use App\Models\ProgramSosial;
 use Illuminate\Support\Facades\Log;
 
 class DigiFlazzController extends Controller
@@ -141,6 +142,7 @@ class DigiFlazzController extends Controller
         $ref_id = $request->input('ref_id');
 
         $cekTagihan = $this->digiflazzService->cekTagihan($buyer_sku_code, $customer_no, $ref_id);
+        Log::info('Controller Cek Tagihan Response: ');
 
         if ($cekTagihan) {
             Log::info('Controller Cek Tagihan Response: ', $cekTagihan);
@@ -156,13 +158,20 @@ class DigiFlazzController extends Controller
         $buyer_sku_code = $request->input('buyer_sku_code');
         $customer_no = $request->input('customer_no');
         $ref_id = $request->input('ref_id');
+        $harga = $request->input('harga');
+        $margin = $request->input('margin');
+        $program_id = $request->input('program_id');
+
+        $dataProgram = ProgramSosial::find($program_id);
+        $dataProgram->saldo = $margin/2;
+        $dataProgram->save();
 
         $cekTagihan = $this->digiflazzService->bayarTagihan($buyer_sku_code, $customer_no, $ref_id);
 
         if ($cekTagihan) {
-            Log::info('Controller Cek Tagihan Response: ', $cekTagihan);
+            Log::info('Controller Bayar Tagihan Response: ', $cekTagihan);
         } else {
-            Log::error('Controller Cek Tagihan Response is null');
+            Log::error('Controller Bayar Tagihan Response is null');
         }
 
         return response()->json($cekTagihan);

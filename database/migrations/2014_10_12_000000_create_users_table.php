@@ -23,12 +23,14 @@ class CreateUsersTable extends Migration
             $table->string('pin')->nullable();
             $table->enum('level', [
                 '0', // basic
-                '1' // admin
-            ])->default('0');
-            $table->enum('status', [
-                '0', // not active
-                '1', // active
-            ])->default('0');
+                '1', // admin
+                '2' // yayasan
+                ])->default('0');
+                $table->enum('status', [
+                    '0', // not active
+                    '1', // active
+                    ])->default('0');
+            $table->string('token_notif')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

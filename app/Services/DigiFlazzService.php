@@ -165,14 +165,14 @@ class DigiFlazzService
             'sign' => $signature,
         ];
 
-        Log::info('Transaction Payload: ', $payload);
+        Log::info('S_Bayar Tagihan Payload: ', $payload);
 
         $response = $this->sendRequest('POST', '/transaction', $payload);
 
         if ($response) {
-            Log::info('Transaction Response: ', $response);
+            Log::info('S_Bayar Tagihan Response: ', $response);
         } else {
-            Log::error('Transaction Response is null');
+            Log::error('S_Bayar Tagihan Response is null');
         }
 
         return $response;   
