@@ -13,7 +13,7 @@ class TopupController extends Controller
     protected $secret;
     public function __construct()
     {
-        $this->secret = env('DIGIFLAZZ_URL');
+        $this->secret = env('MOTA_KEY');
     }
     public function mySaldo()
     {
