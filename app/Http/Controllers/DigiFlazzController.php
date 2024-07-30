@@ -156,16 +156,16 @@ class DigiFlazzController extends Controller
    
     public function bayarTagihan(Request $request)
     {
+        $buyer_sku_code = $request->input('buyer_sku_code');
+        $customer_no = $request->input('customer_no');
+        $ref_id = $request->input('ref_id');
+        $harga = $request->input('harga');
+        $margin = $request->input('margin');
+        $program_id = $request->input('program_id');
 
 
         $dataUser = User::find(auth()->user()->id);
         if ($dataUser->saldo > $harga) {
-            $buyer_sku_code = $request->input('buyer_sku_code');
-            $customer_no = $request->input('customer_no');
-            $ref_id = $request->input('ref_id');
-            $harga = $request->input('harga');
-            $margin = $request->input('margin');
-            $program_id = $request->input('program_id');
     
             $dataProgram = ProgramSosial::find($program_id);
             $dataProgram->saldo = $margin/2;
