@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Topup;
 use App\Models\User;
+use App\Models\HistoriTransaksi;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
@@ -106,6 +107,13 @@ class TopupController extends Controller
                     $dataUser = User::find($jumlahTransfer->userId);
                     $dataUser->saldo += $transaction['amount'];
                     $dataUser->save();
+
+                    HistoriTransaksi::create([
+                        'judul' => 'Topup', 
+                        'nominal' => $transaction['amount'], 
+                        'jenis' => '1', 
+                        'userId' => $jumlahTransfer->userId
+                    ]);
                     return response()->json(['message' => 'Transaksi valid'], 200);
                 }
             }
