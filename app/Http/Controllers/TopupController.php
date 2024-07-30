@@ -50,8 +50,7 @@ class TopupController extends Controller
             $topup->account_number = $validateData['account_number'];
             $topup->jumlah_transaksi = $validateData['jumlah_transaksi'];
             $topup->keterangan = $validateData['keterangan'];
-            // $topup->userId = auth()->user()->id;
-            $topup->userId = 1; // Contoh userId, ganti sesuai kebutuhan
+            $topup->userId = auth()->user()->id;
             $topup->rekeningId = $validateData['rekeningId'];
             $topup->bukti_transfer = $validateData['bukti_transfer'];
     

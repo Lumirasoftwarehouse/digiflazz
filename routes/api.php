@@ -46,9 +46,17 @@ Route::post('/bayar-tagihan', [DigiFlazzController::class, 'bayarTagihan']);
 Route::post('/inquiry-pln', [DigiFlazzController::class, 'inquiryPln']);
 
 
-Route::get('/my-saldo', [TopupController::class, 'mySaldo']);
-Route::post('/topup-saldo', [TopupController::class, 'topUp']);
-Route::post('/handle', [TopupController::class, 'handle']);
+Route::group([
+    'prefix' => 'saldo'
+], function () {
+    Route::group([
+            'middleware' => 'auth:api'
+        ], function () {
+            Route::get('/my-saldo', [TopupController::class, 'mySaldo']);
+            Route::post('/topup-saldo', [TopupController::class, 'topUp']);
+            Route::post('/handle', [TopupController::class, 'handle']);
+    });
+});
 
 
 Route::group([
