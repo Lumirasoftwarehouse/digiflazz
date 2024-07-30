@@ -180,10 +180,10 @@ class DigiFlazzController extends Controller
             if ($cekTagihan) {
                 Log::info('Controller Bayar Tagihan Response: ', $cekTagihan);
                 HistoriTransaksi::create([
-                    'judul' => 'Topup', 
-                    'nominal' => $transaction['amount'], 
-                    'jenis' => '1', 
-                    'userId' => $jumlahTransfer->userId
+                    'judul' => $buyer_sku_code, 
+                    'nominal' => $harga, 
+                    'jenis' => '0', 
+                    'userId' => auth()->user()->id
                 ]);
                 return response()->json(['message' => 'success', 'data' =>$cekTagihan], 200);
             } else {
