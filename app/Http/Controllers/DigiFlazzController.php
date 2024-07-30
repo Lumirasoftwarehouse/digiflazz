@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\DigiFlazzService;
 use App\Models\ProgramSosial;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class DigiFlazzController extends Controller
@@ -155,26 +156,36 @@ class DigiFlazzController extends Controller
    
     public function bayarTagihan(Request $request)
     {
-        $buyer_sku_code = $request->input('buyer_sku_code');
-        $customer_no = $request->input('customer_no');
-        $ref_id = $request->input('ref_id');
-        $harga = $request->input('harga');
-        $margin = $request->input('margin');
-        $program_id = $request->input('program_id');
 
-        $dataProgram = ProgramSosial::find($program_id);
-        $dataProgram->saldo = $margin/2;
-        $dataProgram->save();
 
-        $cekTagihan = $this->digiflazzService->bayarTagihan($buyer_sku_code, $customer_no, $ref_id);
+        $dataUser = User::find(auth()->user()->id);
+        if ($dataUser->saldo > $harga) {
+            $buyer_sku_code = $request->input('buyer_sku_code');
+            $customer_no = $request->input('customer_no');
+            $ref_id = $request->input('ref_id');
+            $harga = $request->input('harga');
+            $margin = $request->input('margin');
+            $program_id = $request->input('program_id');
+    
+            $dataProgram = ProgramSosial::find($program_id);
+            $dataProgram->saldo = $margin/2;
+            $dataProgram->save();
 
-        if ($cekTagihan) {
-            Log::info('Controller Bayar Tagihan Response: ', $cekTagihan);
-        } else {
-            Log::error('Controller Bayar Tagihan Response is null');
+            $dataUser->saldo = $dataUser->saldo - $harga;
+            $dataUser->save();
+            
+            $cekTagihan = $this->digiflazzService->bayarTagihan($buyer_sku_code, $customer_no, $ref_id);
+    
+            if ($cekTagihan) {
+                Log::info('Controller Bayar Tagihan Response: ', $cekTagihan);
+            } else {
+                Log::error('Controller Bayar Tagihan Response is null');
+            }
+    
+            return response()->json(['message' => 'success', 'data' =>$cekTagihan], 200);
         }
+        return response()->json(['message' => 'failed'], 400);
 
-        return response()->json($cekTagihan);
     }
 
     public function inquiryPln(Request $request)
