@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\DigiFlazzService;
 use App\Models\ProgramSosial;
+use App\Models\HistoriTransaksi;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
@@ -178,13 +179,19 @@ class DigiFlazzController extends Controller
     
             if ($cekTagihan) {
                 Log::info('Controller Bayar Tagihan Response: ', $cekTagihan);
+                HistoriTransaksi::create([
+                    'judul' => 'Topup', 
+                    'nominal' => $transaction['amount'], 
+                    'jenis' => '1', 
+                    'userId' => $jumlahTransfer->userId
+                ]);
+                return response()->json(['message' => 'success', 'data' =>$cekTagihan], 200);
             } else {
                 Log::error('Controller Bayar Tagihan Response is null');
+                return response()->json(['message' => 'failed'], 400);
             }
-    
-            return response()->json(['message' => 'success', 'data' =>$cekTagihan], 200);
+             
         }
-        return response()->json(['message' => 'failed'], 400);
 
     }
 
