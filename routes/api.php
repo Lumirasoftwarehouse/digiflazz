@@ -54,9 +54,9 @@ Route::group([
         ], function () {
             Route::get('/my-saldo', [TopupController::class, 'mySaldo']);
             Route::post('/topup-saldo', [TopupController::class, 'topUp']);
-            Route::post('/handle', [TopupController::class, 'handle']);
+        });
     });
-});
+    Route::post('/handle', [TopupController::class, 'handle']);
 
 
 Route::group([
