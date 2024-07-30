@@ -127,7 +127,7 @@ class TopupController extends Controller
 
     public function historyTransaksi()
     {
-        $dataTransaksi = HistoriTransaksi::find(auth()->user()->id);
+        $dataTransaksi = HistoriTransaksi::where('userId', auth()->user()->id);
         return response()->json(['message' => 'success', 'data' => $dataTransaksi], 200);
     }
 }
