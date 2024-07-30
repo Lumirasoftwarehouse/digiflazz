@@ -35,15 +35,23 @@ Route::group([
 });
 
 
+Route::group([
+    'prefix' => 'digi'
+], function () {
+    Route::group([
+            'middleware' => 'auth:api'
+        ], function () {
+            Route::get('/check-balance', [DigiFlazzController::class, 'checkBalance']);
+            Route::get('/price-list-pulsa', [DigiFlazzController::class, 'getPriceListPulsa']);
+            Route::post('/deposit', [DigiFlazzController::class, 'deposit']);
+            Route::post('/topup', [DigiFlazzController::class, 'topup']);
+            Route::post('/cek-tagihan', [DigiFlazzController::class, 'cekTagihan']);
+            Route::post('/bayar-tagihan', [DigiFlazzController::class, 'bayarTagihan']);
+            Route::post('/inquiry-pln', [DigiFlazzController::class, 'inquiryPln']);
+        });
+    });
 
 
-Route::get('/check-balance', [DigiFlazzController::class, 'checkBalance']);
-Route::get('/price-list-pulsa', [DigiFlazzController::class, 'getPriceListPulsa']);
-Route::post('/deposit', [DigiFlazzController::class, 'deposit']);
-Route::post('/topup', [DigiFlazzController::class, 'topup']);
-Route::post('/cek-tagihan', [DigiFlazzController::class, 'cekTagihan']);
-Route::post('/bayar-tagihan', [DigiFlazzController::class, 'bayarTagihan']);
-Route::post('/inquiry-pln', [DigiFlazzController::class, 'inquiryPln']);
 
 
 Route::group([
