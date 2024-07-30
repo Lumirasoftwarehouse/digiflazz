@@ -61,6 +61,7 @@ Route::group([
             'middleware' => 'auth:api'
         ], function () {
             Route::get('/my-saldo', [TopupController::class, 'mySaldo']);
+            Route::get('/histori-transaksi', [TopupController::class, 'historyTransaksi']);
             Route::post('/topup-saldo', [TopupController::class, 'topUp']);
         });
     });

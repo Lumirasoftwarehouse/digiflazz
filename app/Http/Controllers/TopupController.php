@@ -123,4 +123,11 @@ class TopupController extends Controller
         
         return response()->json(['message' => 'Webhook received successfully'], 200);
     }
+
+
+    public function historyTransaksi()
+    {
+        $dataTransaksi = HistoriTransaksi::find(auth()->user()->id);
+        return response()->json(['message' => 'success', 'data' => $dataTransaksi], 200);
+    }
 }
