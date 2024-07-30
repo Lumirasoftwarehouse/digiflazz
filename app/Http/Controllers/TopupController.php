@@ -86,8 +86,9 @@ class TopupController extends Controller
                 $typeBank = Topup::where('bank_type', $transaction['bank']['bank_type'] ?? null)->first();
                 $namaPemilik = Topup::where('bank_account_name', $transaction['bank']['atas_nama'] ?? null)->first();
                 $jumlahTransfer = Topup::where('jumlah_transaksi', $transaction['amount'] ?? null)->first();
+                $statusTransfer = Topup::where('status', '0')->first();
                 
-                if ($typeBank && $namaPemilik && $jumlahTransfer && $jumlahTransfer->status == '0') {
+                if ($typeBank && $namaPemilik && $jumlahTransfer && $statusTransfer) {
                     // lakukan update data dan statusnya dibuat '1'
                     $jumlahTransfer->update([
                         'keterangan' => $transaction['description'] ?? null,
