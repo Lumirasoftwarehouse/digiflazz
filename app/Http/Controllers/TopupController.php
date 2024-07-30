@@ -12,13 +12,9 @@ class TopupController extends Controller
 {
     private $secret = 'LeOkBLS7';
 
-    public function mySaldo(Request $request)
+    public function mySaldo()
     {
-        $validateData = $request->validate([
-            'id' => 'required'
-        ]);
-
-        $dataUser = User::find($validateData['id']);
+        $dataUser = User::find(auth()->user()->id);
 
         return response()->json(['message' => 'success', 'saldo' => $dataUser->saldo]);
     }
