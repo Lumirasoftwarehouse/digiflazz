@@ -105,12 +105,13 @@ class TopupController extends Controller
                     $dataUser = User::find($jumlahTransfer->userId);
                     $dataUser->saldo += $transaction['amount'];
                     $dataUser->save();
+                    return response()->json(['message' => 'Transaksi valid'], 200);
                 }
             }
         }
-
+        
         Log::info('Received valid webhook:', $data);
-
+        
         return response()->json(['message' => 'Webhook received successfully'], 200);
     }
 }
