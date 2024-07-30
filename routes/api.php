@@ -8,6 +8,7 @@ use App\Http\Controllers\ProgramSosialController;
 use App\Http\Controllers\TopupController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RekeningController;
+use App\Http\Controllers\NotifikasiController;
 
 
 Route::group([
@@ -87,6 +88,16 @@ Route::group([
     Route::post('create', [RekeningController::class, 'createRekening']);
     Route::post('update/{id}', [RekeningController::class, 'updateRekening']);
     Route::delete('delete/{id}', [RekeningController::class, 'deleteRekening']);
+    // });
+});
+
+Route::group([
+    'prefix' => 'notifikasi'
+], function () {
+    // Route::group([
+    //     'middleware' => 'auth:api'
+    // ], function () {
+    Route::get('my-notif', [NotifikasiController::class, 'myNotifikasi']);
     // });
 });
 

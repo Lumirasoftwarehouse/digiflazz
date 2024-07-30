@@ -26,32 +26,47 @@ class TopupController extends Controller
     // topup dari user
     public function topUp(Request $request)
     {
-        $validateData = $request->validate([
-            'jumlah_transaksi' => 'required',
-            'bank_account_name' => 'required',
-            'bank_type' => 'required',
-            'keterangan' => 'required',
-            'rekeningId' => 'required',
-            'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ]);
-
-        // Simpan file bukti transfer ke local storage
-        if ($request->hasFile('bukti_transfer')) {
-            $file = $request->file('bukti_transfer');
-            $path = $file->store('bukti_transfer', 'public');
-            $validateData['bukti_transfer'] = $path;
+        try {
+            $validateData = $request->validate([
+                'bank_type' => 'required',
+                'bank_account_name' => 'required',
+                'account_number' => 'required',
+                'jumlah_transaksi' => 'required',
+                'keterangan' => 'required',
+                'rekeningId' => 'required',
+                'bukti_transfer' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]);
+    
+            // Simpan file bukti transfer ke local storage
+            if ($request->hasFile('bukti_transfer')) {
+                $file = $request->file('bukti_transfer');
+                $path = $file->store('bukti_transfer', 'public');
+                $validateData['bukti_transfer'] = $path;
+            }
+    
+            $topup = new Topup();
+            $topup->bank_type = $validateData['bank_type'];
+            $topup->bank_account_name = $validateData['bank_account_name'];
+            $topup->account_number = $validateData['account_number'];
+            $topup->jumlah_transaksi = $validateData['jumlah_transaksi'];
+            $topup->keterangan = $validateData['keterangan'];
+            // $topup->userId = auth()->user()->id;
+            $topup->userId = 1; // Contoh userId, ganti sesuai kebutuhan
+            $topup->rekeningId = $validateData['rekeningId'];
+            $topup->bukti_transfer = $validateData['bukti_transfer'];
+    
+            $topup->save();
+    
+            return response()->json(['message' => 'success']);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Tangani error validasi
+            return response()->json(['message' => 'Validation Error', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Tangani error lainnya
+            return response()->json(['message' => 'Internal Server Error', 'error' => $e->getMessage()], 500);
         }
-        $topup = new Topup();
-        $topup->jumlah_transaksi = $validateData['jumlah_transaksi'];
-        $topup->bank_account_name = $validateData['bank_account_name'];
-        $topup->bank_type = $validateData['bank_type'];
-        $topup->keterangan = $validateData['keterangan'];
-        $topup->userId = auth()->user()->id;
-        $topup->rekeningId = $validateData['rekeningId'];
-        $topup->bukti_transfer = $validateData['bukti_transfer'];
-
-        return response()->json(['message' => 'success']);
     }
+    
 
     // verifikasi dengan response dari cek mutasi
     public function handle(Request $request)
