@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Hash;
 
 class TopupController extends Controller
 {
-    private $secret = 'LeOkBLS7';
-
+    protected $secret;
+    public function __construct()
+    {
+        $this->secret = env('DIGIFLAZZ_URL');
+    }
     public function mySaldo()
     {
         $dataUser = User::find(auth()->user()->id);
