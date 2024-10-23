@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use GuzzleHttp\Client;
+use App\Models\ListPrice;
 use Illuminate\Support\Facades\Log;
 
 class DigiFlazzService
@@ -49,6 +50,30 @@ class DigiFlazzService
         return $response;
     }
 
+    // public function getPriceList()
+    // {
+    //     $command = 'pricelist';
+    //     $signature = $this->signature($command);
+
+    //     $payload = [
+    //         'cmd' => 'prepaid',
+    //         'username' => $this->username,
+    //         'sign' => $signature,
+    //     ];
+
+    //     Log::info('Get Price List Payload: ', $payload);
+
+    //     $response = $this->sendRequest('POST', '/price-list', $payload);
+
+    //     if ($response) {
+    //         Log::info('Get Price List Response: ', $response);
+    //     } else {
+    //         Log::error('Get Price List Response is null');
+    //     }
+
+    //     return $response;
+    // }
+
     public function getPriceList()
     {
         $command = 'pricelist';
@@ -66,12 +91,45 @@ class DigiFlazzService
 
         if ($response) {
             Log::info('Get Price List Response: ', $response);
+            $this->updatePriceList($response);
         } else {
             Log::error('Get Price List Response is null');
         }
 
-        return $response;
+        $dataProduct = ListPrice::get();
+        return $dataProduct;
     }
+
+    private function updatePriceList($response)
+    {
+        $skuCodes = [];
+        foreach ($response['data'] as $item) {
+            $skuCodes[] = $item['buyer_sku_code'];
+            ListPrice::updateOrCreate(
+                ['buyer_sku_code' => $item['buyer_sku_code']],
+                [
+                    'product_name' => $item['product_name'],
+                    'category' => $item['category'],
+                    'brand' => $item['brand'],
+                    'type' => $item['type'],
+                    'seller_name' => $item['seller_name'],
+                    'price' => $item['price'],
+                    'seller_product_status' => $item['seller_product_status'],
+                    'unlimited_stock' => $item['unlimited_stock'],
+                    'stock' => $item['stock'],
+                    'multi' => $item['multi'],
+                    'start_cut_off' => $item['start_cut_off'],
+                    'end_cut_off' => $item['end_cut_off'],
+                    'desc' => $item['desc'],
+                    'margin' => 2000  // Set margin secara otomatis
+                ]
+            );
+        }
+
+        // Hapus data yang tidak ada di response
+        ListPrice::whereNotIn('buyer_sku_code', $skuCodes)->delete();
+    }
+
 
     public function deposit($refId, $amount, $bank, $ownerName)
     {
